@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Regular Timetable</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Videostreamer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="/cameras">Камеры</a></li>
+            <li class="nav-item"><a class="nav-link" href="/streams">Стримы</a></li>
+            <li class="nav-item"><a class="nav-link" href="/videos">Видео</a></li>
+            <li class="nav-item"><a class="nav-link" href="/timetables">Расписания</a></li>
+            <li class="nav-item"><a class="nav-link" href="/regular-timetables">Регулярные расписания</a></li>
+            <li class="nav-item"><a class="nav-link" href="/action-logs">Журнал действий</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    admin
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/logout">Выйти</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-3">
+    <h2>Добавить новое регулярное расписание</h2>
+    <form id="regularTimetableForm" th:action="@{/regular-timetables/add}" th:object="${regularTimetable}" method="post">
+        <div class="form-group">
+            <label for="cameraId">ID камеры:</label>
+            <input type="text" id="cameraId" name="cameraId" class="form-control" th:field="*{cameraId}" required>
+        </div>
+        <div class="form-group">
+            <label for="dayOfWeek">День недели:</label>
+            <input type="number" id="dayOfWeek" name="dayOfWeek" class="form-control" th:field="*{dayOfWeek}" required>
+            <div class="invalid-feedback">День недели должен быть в диапазоне от 1 до 7.</div>
+        </div>
+        <div class="form-group">
+            <label for="timeStart">Время начала:</label>
+            <input type="time" id="timeStart" name="timeStart" class="form-control" th:field="*{timeStart}" required>
+        </div>
+        <div class="form-group">
+            <label for="timeEnd">Время окончания:</label>
+            <input type="time" id="timeEnd" name="timeEnd" class="form-control" th:field="*{timeEnd}" required>
+        </div>
+        <div class="form-group">
+            <label for="isUsed">Используется?:</label>
+            <select id="isUsed" name="isUsed" class="form-control" th:field="*{isUsed}" required>
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить регулярное расписание</button>
+    </form>
+</div>
+
+<!-- Bootstrap Modal for Time Validation Error -->
+<div class="modal fade" id="timeValidationErrorModal" tabindex="-1" role="dialog" aria-labelledby="timeValidationErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="timeValidationErrorModalLabel">Ошибка во времени</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Время начала должно быть меньше времени окончания.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('regularTimetableForm').addEventListener('submit', function(event) {
+        const dayOfWeek = document.getElementById('dayOfWeek').value;
+        const timeStart = document.getElementById('timeStart').value;
+        const timeEnd = document.getElementById('timeEnd').value;
+
+        if (dayOfWeek < 1 || dayOfWeek > 7) {
+            event.preventDefault(); // Prevent form submission
+            document.getElementById('dayOfWeek').classList.add('is-invalid');
+        } else {
+            document.getElementById('dayOfWeek').classList.remove('is-invalid');
+        }
+
+        //if (timeStart >= timeEnd) {
+        $('#timeValidationErrorModal').modal('show');
+        //alert('Время начала должно быть меньше времени окончания.');
+        event.preventDefault(); // Prevent form submission
+        //}
+    });
+</script>
+
+</body>
+</html>

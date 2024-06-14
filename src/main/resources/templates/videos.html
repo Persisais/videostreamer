@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Videos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .navbar-nav .nav-link {
+            font-size: 18px; /* Увеличение размера текста */
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header-admin :: navbar"></div>
+<div class="container mt-3">
+    <h2>Видео</h2>
+    <form id="searchForm" th:action="@{/videos/search}" method="get" class="form-inline mb-3">
+        <div class="form-group mr-2">
+            <label for="cameraId" class="mr-2">ID камеры:</label>
+            <input type="text" id="cameraId" name="cameraId" class="form-control" placeholder="Введите ID камеры">
+        </div>
+        <div class="form-group mr-2">
+            <label for="startDate" class="mr-2">Дата начала:</label>
+            <input type="datetime-local" id="startDate" name="startDate" class="form-control">
+        </div>
+        <div class="form-group mr-2">
+            <label for="endDate" class="mr-2">Дата окончания:</label>
+            <input type="datetime-local" id="endDate" name="endDate" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Найти видео</button>
+    </form>
+    <!--<a href="/videos/add" class="btn btn-primary mb-3">Add New Video</a>-->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>ID камеры</th>
+            <th>Дата начала</th>
+            <th>Дата окончания</th>
+            <th>Путь</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="video : ${videos}">
+            <td th:text="${video.id}"></td>
+            <td th:text="${video.cameraId}"></td>
+            <td th:text="${#temporals.format(video.dateStart, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${#temporals.format(video.dateEnd, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${video.path}"></td>
+            <td>
+                <a th:href="@{'/videos/download/' + ${video.id}}" class="btn btn-info btn-sm">Скачать</a>
+                <a th:href="@{'/videos/view/' + ${video.id}}" class="btn btn-primary btn-sm">Посмотреть</a>
+               <a th:href="@{'/videos/delete/' + ${video.id}}" class="btn btn-danger btn-sm">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Date Validation Error -->
+<div class="modal fade" id="dateErrorModal" tabindex="-1" role="dialog" aria-labelledby="dateErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dateErrorModalLabel">Ошибка в датах</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Дата начала должна быть меньше даты окончания.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for No Videos Found -->
+<div class="modal fade" id="noVideosModal" tabindex="-1" role="dialog" aria-labelledby="noVideosModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noVideosModalLabel">Поиск видео</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                В указанный период видео не найдены.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Отменяет стандартное поведение формы
+
+        const startDate = new Date(document.getElementById('startDate').value);
+        const endDate = new Date(document.getElementById('endDate').value);
+
+        // Проверка корректности введенных дат
+        if (startDate > endDate) {
+            $('#dateErrorModal').modal('show');
+            event.preventDefault(); // Останавливаем отправку формы
+            return false;
+        }
+
+        // Здесь можно вставить AJAX запрос для проверки наличия видео
+        // Если видео не найдены (пример кода для демонстрации)
+        //$('#noVideosModal').modal('show');
+        $('#dateErrorModal').modal('show');
+        event.preventDefault(); // Останавливаем отправку формы
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

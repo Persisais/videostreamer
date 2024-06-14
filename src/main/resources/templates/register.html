@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Videostreamer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Регистрация</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Авторизация</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    <h2>Регистрация</h2>
+    <form id="registrationForm" th:action="@{/register}" th:object="${user}" method="post" novalidate>
+        <div class="form-group">
+            <label for="name">Имя:</label>
+            <input type="text" class="form-control" id="name" placeholder="Введите имя" th:field="*{name}" required>
+            <div class="invalid-feedback">Такое имя пользователя уже занято.</div>
+        </div>
+        <div class="form-group">
+            <label for="email">Электронная почта:</label>
+            <input type="email" class="form-control" id="email" placeholder="Введите электронную почту" th:field="*{email}" required>
+            <div class="invalid-feedback">Такая электронная почта уже занята.</div>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" class="form-control" id="password" placeholder="Введите пароль" th:field="*{password}" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Подтвердите пароль:</label>
+            <input type="password" class="form-control" id="confirmPassword" placeholder="Подтвердите пароль" required>
+            <div class="invalid-feedback">Пароли не совпадают.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+    </form>
+</div>
+
+<!-- Модальное окно для уведомления об успешной регистрации -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Успешная регистрация</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Вы успешно зарегистрированы!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        var form = this;
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+        var validationFailed = false;
+
+        if (name === "test" || email === "test@example.com") {
+            if (name === "test") {
+                var nameInput = document.getElementById('name');
+                nameInput.classList.add('is-invalid');
+                validationFailed = true;
+            }
+            if (email === "test@example.com") {
+                var emailInput = document.getElementById('email');
+                emailInput.classList.add('is-invalid');
+                validationFailed = true;
+            }
+        }
+
+        if (password !== confirmPassword) {
+            var confirmPasswordInput = document.getElementById('confirmPassword');
+            confirmPasswordInput.classList.add('is-invalid');
+            validationFailed = true;
+        }
+
+        if (!validationFailed) {
+            $('#successModal').modal('show');  // Показать модальное окно при успешной валидации
+            event.preventDefault(); // Остановить отправку формы для демонстрации
+        } else {
+            event.preventDefault(); // Остановить отправку формы из-за ошибок валидации
+        }
+    });
+</script>
+</body>
+</html>

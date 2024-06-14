@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список стримов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .navbar-nav .nav-link {
+            font-size: 18px; /* Увеличение размера текста */
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header-admin :: navbar"></div>
+
+<div class="container mt-3">
+    <h2>Стримы</h2>
+    <a href="/streams/add" class="btn btn-primary mb-3">Добавить новый стрим</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>ID камеры</th>
+            <th>URL</th>
+            <th>Продолжительность</th>
+            <th>Используется?</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="stream : ${streams}">
+            <td th:text="${stream.id}"></td>
+            <td th:text="${stream.cameraId}"></td>
+            <td><a th:href="@{'/streams/' + ${stream.outputUrl}}" th:text="${stream.outputUrl}"></a></td>
+            <td th:text="${stream.time}"></td>
+            <td th:text="${stream.isUsed} ? 'Да' : 'Нет'"></td>
+            <td>
+                <a th:href="@{|/streams/${stream.id}/edit|}" class="btn btn-warning btn-sm">Изменить</a>
+                <a th:href="@{|/streams/${stream.id}/delete|}" class="btn btn-danger btn-sm">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

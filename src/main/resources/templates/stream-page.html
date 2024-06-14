@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Stream</title>
+</head>
+<body>
+<div class="container">
+    <h1>Stream: <span th:text="${stream.outputUrl}"></span></h1>
+    <video controls autoplay>
+        <source th:src="@{{stream.camera.url}(url=${stream.camera.url})}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+</body>
+</html>

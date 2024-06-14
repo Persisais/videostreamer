@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список камер</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .navbar-nav .nav-link {
+            font-size: 18px; /* Увеличение размера текста */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Videostreamer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="/cameras">Камеры</a></li>
+            <li class="nav-item"><a class="nav-link" href="/streams">Стримы</a></li>
+            <li class="nav-item"><a class="nav-link" href="/videos">Видео</a></li>
+            <li class="nav-item"><a class="nav-link" href="/timetables">Расписания</a></li>
+            <li class="nav-item"><a class="nav-link" href="/regular-timetables">Регулярные расписания</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Vasya
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/logout">Выйти</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-3">
+    <h1>Камеры</h1>
+<!--    <a href="/cameras/add" class="btn btn-primary mb-3">Добавить</a>-->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>URL</th>
+            <th>Используется?</th>
+            <th>Использует расписания?</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="camera : ${cameras}">
+            <td th:text="${camera.id}"></td>
+            <td th:text="${camera.name}"></td>
+            <td th:text="${camera.url}"></td>
+            <td th:text="${camera.isUsed} ? 'Да' : 'Нет'"></td>
+            <td th:text="${camera.isUsingTimetable} ? 'Да' : 'Нет'"></td>
+            <td>
+<!--                <a th:href="@{|/cameras/${camera.id}/edit|}" class="btn btn-warning btn-sm">Изменить</a>
+                <a th:href="@{|/cameras/${camera.id}/delete|}" class="btn btn-danger btn-sm">Удалить</a>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
